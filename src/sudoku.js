@@ -6,9 +6,15 @@ var c = function(text){
 
 var Board = {
   init : function(board_string){
-    this.board_string = board_string;
+    this.board = board_string;
   },
   solve : function(){
 
+  },
+  parse : function(){
+    this.board = this.board.split();
+    this.board.forEach(item){
+      
+    }
   }
 };

@@ -12,13 +12,3 @@ var Board = {
 
   }
 };
-
-c(input);
-
-c(Board);
-
-c(Board.init(input));
-
-c(Board.solve());
-
-c(Board.board_string);

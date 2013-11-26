@@ -44,7 +44,19 @@ var Board = {
   // Solve function and it's helpers
 
   solve : function(){
-
+    while ( ! Board.boardSolved() ) {
+      for(var row = 0; row < 9; row++) {
+        for(var col = 0; col < 9; col++) {
+          if ( ! Board.cellSolved(row,col) ){
+            Board.eliminateCellCandidates(row,col);
+            Board.convertToIntIfSolved(row,col);
+          }
+        }
+      }
+    }
+  },
+  boardSolved : function() {
+    return (_.flatten(Board.board).length <= 81);
   },
   cellSolved : function(row, col){
     return _.isNumber(Board.board[row][col]);

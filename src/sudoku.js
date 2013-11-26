@@ -9,18 +9,12 @@ var Board = {
     this.board = board_string;
   },
 
-  // Solve function and it's helpers
-
-  solve : function(){
-
-  },
-
-
-  // Convert to 2d array function and it's helpers
+  // Setup: convert to 2d array function and it's helpers
 
   parse : function(){
     this.convertToArray();
     this.convertToInt();
+    this.insertCandidateArrays();
     this.splitRows();
   },
   convertToArray : function(){
@@ -31,11 +25,65 @@ var Board = {
       return parseInt(char, 10);
     });
   },
+  insertCandidateArrays : function(){
+    Board.board.forEach(function(cell, i){
+      if (cell === 0) {
+        Board.board[i] = [1,2,3,4,5,6,7,8,9];
+      }
+    });
+  },
   splitRows : function(){
     var splitBoard = [];
     for (var i = 9; i <= 81; i += 9) {
       splitBoard.push(this.board.slice(i-9, i));
     }
     this.board = splitBoard;
-  }
+  },
+
+
+  // Solve function and it's helpers
+
+  solve : function(){
+
+  },
+  cellSolved : function(row, col){
+    return _.isNumber(Board.board[row][col]);
+  },
+  eliminateCellCandidates : function(row, col){
+    Board.board[row][col] = _.difference(Board.board[row][col],
+                                         Board.rowNonCandidates(row),
+                                         Board.colNonCandidates(col),
+                                         Board.blockNonCandidates(row,col));
+  },
+  convertToIntIfSolved : function(row, col){
+    if (Board.board[row][col].length === 1) {
+      Board.board[row][col] = Board.board[row][col][0];
+    }
+  },
+  rowNonCandidates : function(row){
+    return _.filter(Board.board[row], function(cell){
+      return _.isNumber(cell);
+    });
+  },
+  colNonCandidates : function(col){
+    var nonCandidates = [];
+    _.each(Board.board, function(row){
+      if (_.isNumber(row[col])){
+        nonCandidates.push(row[col]);
+      }
+    });
+    return nonCandidates;
+  },
+  blockNonCandidates : function(row,col){
+    var nonCandidates = [];
+    for (var blockRow = row-row%3; blockRow < (row-row%3)+3; blockRow++ ) {
+      for (var blockCol = col-col%3; blockCol < (col-col%3)+3; blockCol++) {
+        if (_.isNumber(Board.board[blockRow][blockCol])){
+          nonCandidates.push(Board.board[blockRow][blockCol]);
+        }
+      }
+    }
+    return nonCandidates;
+  },
+
 };
